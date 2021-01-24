@@ -5,6 +5,16 @@
 #include "list_hash/hlist.h"
 #include "list_hash/hhash.h"
 
+static int max(int a, int b)
+{
+    return a > b ? a : b;
+}
+
+static int min(int a, int b)
+{
+    return a < b ? a : b;
+}
+
 /* leetcode 1319. 连通网络的操作次数 并查集
    https://leetcode-cn.com/problems/number-of-operations-to-make-network-connected/
    问题思路转换一下：统计当前网络中所有并查集的个数
@@ -102,8 +112,54 @@ int findLengthOfLCIS(int* nums, int numsSize)
     return res;
 }
 
+/*
+989. 数组形式的整数加法
+https://leetcode-cn.com/problems/add-to-array-form-of-integer/
+
+*/
+
+int* addToArrayForm(int* A, int ASize, int K, int* returnSize)
+{
+    int KSize = 0;
+    int tmpK = K;
+    while (tmpK > 0) {
+        KSize++;
+        tmpK /= 10;
+    }
+
+    int retLen = max(ASize, KSize) + 1;
+    int *ret = (int *)calloc(retLen, sizeof(int));
+    *returnSize = retLen;
+    int AIndex = ASize - 1;
+    int carry = 0;
+
+    for (int i = retLen - 1; i >= 0; --i) {
+        int a = AIndex >= 0 ? A[AIndex--] : 0;
+        int k = K > 0 ? K % 10 : 0;
+        K /= 10;
+        ret[i] = (a + k + carry) % 10;
+        carry = (a + k + carry) / 10;
+    }
+
+    if (ret[0] == 0) {
+        (*returnSize)--;
+        memmove(ret, ret + 1, (*returnSize) * sizeof(int));
+    }
+    return ret;
+}
+
+int printArray(int *array, int arraySize)
+{
+    printf("res =");
+    for (int i = 0; i < arraySize; ++i) {
+        printf(" %d", array[i]);
+    }
+    printf("\n");
+}
+
 int main(int argc, const char *argv[])
 {
+    /*******************************************************************************/
     int n = 4;
     int connection1[] = {0, 1};
     int connection2[] = {0, 2};
@@ -113,8 +169,14 @@ int main(int argc, const char *argv[])
     int connectionsSize = 3;
 
     int res = makeConnected(n, connectionsPtr, connectionsSize, connectionsColSize);
-
     printf("%s %d\n", "hello world --- ", res);
+    /*******************************************************************************/
+    int A[] = {1,2,0,0};
+    int K = 34;
+    int returnSize1;
+    int *ret1 = addToArrayForm(A, 4, 34, &returnSize1);
+    printArray(ret1, returnSize1);
+    /*******************************************************************************/
     return 0;
 }
 
