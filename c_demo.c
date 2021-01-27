@@ -230,6 +230,131 @@ int regionsBySlashes(char ** grid, int gridSize)
     return res;
 }
 
+/*
+1128. 等价多米诺骨牌对的数量
+https://leetcode-cn.com/problems/number-of-equivalent-domino-pairs/
+*/
+
+/* 暴力解法，超出时间限制
+
+bool equal(int *dominoeA, int *dominoeB)
+{
+    return (dominoeA[0] == dominoeB[0] && dominoeA[1] == dominoeB[1]) ||
+           (dominoeA[0] == dominoeB[1] && dominoeA[1] == dominoeB[0]);
+}
+
+int numEquivDominoPairs(int** dominoes, int dominoesSize, int* dominoesColSize)
+{
+    int res = 0;
+    for (int i = 0; i < dominoesSize; ++i) {
+        for (int j = i + 1; j < dominoesSize; ++j) {
+            if (equal(dominoes[i], dominoes[j])) {
+                res++;
+            }
+        }
+    }
+    return res;
+}
+*/
+
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int combine(int m, int n)
+{
+	int ans = 1;
+	if(m < n - m){
+        m = n-m;
+    }
+	for(int i = m + 1; i <= n; i++) {
+        ans *= i;
+    }
+	for(int j = 1; j <= n - m; j++) {
+        ans /= j;
+    }
+	return ans;
+}
+
+int numEquivDominoPairs(int** dominoes, int dominoesSize, int* dominoesColSize)
+{
+    int num[100] = {0};
+    for (int i = 0; i < dominoesSize; ++i) {
+        if (dominoes[i][0] > dominoes[i][1]) {
+            swap(&dominoes[i][0], &dominoes[i][1]);
+        }
+    }
+
+    for (int i = 0; i < dominoesSize; ++i) {
+        num[dominoes[i][0] * 10 + dominoes[i][1]]++;
+    }
+
+    int res = 0;
+    for (int i = 0; i < 100; ++i) {
+        if (num[i] > 1) {
+            res += combine(2, num[i]);
+        }
+    }
+    return res;
+}
+
+
+/*
+1579. 保证图可完全遍历
+https://leetcode-cn.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/
+*/
+
+void tryToRemoveEdge(int** edges, int edgesSize, int *parent, int type, int *res)
+{
+    for (int i = 0; i < edgesSize; ++i) {
+        if (edges[i][0] == type) {
+            int pa = find(edges[i][1], parent);
+            int pb = find(edges[i][2], parent);
+            if (pa != pb) {
+                merge(pa, pb, parent);
+            } else {
+                (*res)++;
+            }
+        }
+    }    
+}
+
+bool isAllConnected(int *parent, int n)
+{
+    int setNum = 0;
+    for (int i = 1; i <= n; ++i) {
+        if (i == find(i, parent)) {
+            setNum++;
+        }
+    }
+    return setNum == 1;
+}
+
+int maxNumEdgesToRemove(int n, int** edges, int edgesSize, int* edgesColSize)
+{
+    int parentComm[n + 1];
+    int parentAlice[n + 1];
+    int parentBob[n + 1];
+    int res = 0;
+
+    initParent(parentComm, n + 1);
+    tryToRemoveEdge(edges, edgesSize, parentComm, 3, &res);
+    
+    memcpy(parentAlice, parentComm, sizeof(parentComm));
+    memcpy(parentBob, parentComm, sizeof(parentComm));
+
+    tryToRemoveEdge(edges, edgesSize, parentAlice, 1, &res);
+    tryToRemoveEdge(edges, edgesSize, parentBob, 2, &res);
+    
+    if (isAllConnected(parentAlice, n) && isAllConnected(parentBob, n)) {
+        return res;
+    } else {
+        return -1;
+    }
+}
 
 int printArray(int *array, int arraySize)
 {
