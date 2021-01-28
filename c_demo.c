@@ -21,7 +21,6 @@ static int min(int a, int b)
    联通m个并查集需要变动的线的个数为m-1
    联通n个计算机需要最小的线的个数为n-1，如果线缆数量小于n-1，那么需要返回-1
 */
-
 int find(int x, int *parent)
 {
     if (x != parent[x]) {
@@ -72,7 +71,6 @@ int makeConnected(int n, int** connections, int connectionsSize, int* connection
     }
 }
 
-
 /*
 674. 最长连续递增序列
 https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/
@@ -88,7 +86,6 @@ base case:
 for i in range(0, n)
 dp(i) = i;
 */
-
 int findLengthOfLCIS(int* nums, int numsSize)
 {
     if (!nums || !numsSize) {
@@ -115,9 +112,7 @@ int findLengthOfLCIS(int* nums, int numsSize)
 /*
 989. 数组形式的整数加法
 https://leetcode-cn.com/problems/add-to-array-form-of-integer/
-
 */
-
 int* addToArrayForm(int* A, int ASize, int K, int* returnSize)
 {
     int KSize = 0;
@@ -153,7 +148,6 @@ leetcode 959. 由斜杠划分区域
 https://leetcode-cn.com/problems/regions-cut-by-slashes/
 并查集
 */
-
 void mergeRegions(char ** grid, int gridSize, int *parent)
 {
     for (int i = 0; i < gridSize; ++i) {
@@ -234,7 +228,6 @@ int regionsBySlashes(char ** grid, int gridSize)
 1128. 等价多米诺骨牌对的数量
 https://leetcode-cn.com/problems/number-of-equivalent-domino-pairs/
 */
-
 /* 暴力解法，超出时间限制
 
 bool equal(int *dominoeA, int *dominoeB)
@@ -306,7 +299,6 @@ int numEquivDominoPairs(int** dominoes, int dominoesSize, int* dominoesColSize)
 1579. 保证图可完全遍历
 https://leetcode-cn.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/
 */
-
 void tryToRemoveEdge(int** edges, int edgesSize, int *parent, int type, int *res)
 {
     for (int i = 0; i < edgesSize; ++i) {
@@ -356,6 +348,28 @@ int maxNumEdgesToRemove(int n, int** edges, int edgesSize, int* edgesColSize)
     }
 }
 
+/*
+724. 寻找数组的中心索引
+https://leetcode-cn.com/problems/find-pivot-index/
+*/
+int pivotIndex(int* nums, int numsSize)
+{
+    int sum = 0;
+    for (int i = 0; i < numsSize; ++i) {
+        sum += nums[i];
+    }
+
+    int leftSum = 0;
+    for (int i = 0; i < numsSize; ++i) {
+        if (leftSum * 2 + nums[i] == sum) {
+            return i;
+        }
+        leftSum += nums[i];
+    }
+
+    return -1;
+}
+
 int printArray(int *array, int arraySize)
 {
     printf("res =");
@@ -385,10 +399,12 @@ int main(int argc, const char *argv[])
     int *ret1 = addToArrayForm(A, 4, 34, &returnSize1);
     printArray(ret1, returnSize1);
     /*******************************************************************************/
-
     char *S = "\\/";
     printf("%s %d %c\n", S, (int)strlen(S), S[1]);
-
+    /*******************************************************************************/
+    int nums[] = {0,0,0,0,1};
+    int ret2 = pivotIndex(nums, 5);
+    printf("ret2 = %d\n", ret2);
     return 0;
 }
 
