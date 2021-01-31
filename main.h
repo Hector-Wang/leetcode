@@ -17,4 +17,6 @@ int findLengthOfLCIS(int* nums, int numsSize);
 
 int numSimilarGroups(char ** strs, int strsSize);
 
+int minimumEffortPath(int **heights, int heightsSize, int *heightsColSize);
+
 #endif
