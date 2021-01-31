@@ -140,7 +140,6 @@ int minimumEffortPath(int **heights, int heightsSize, int *heightsColSize)
  * 与上题同理，也是使用Dijkstra算法寻求最短路径
  * 只不过这一题的路径变成了，与0的差值的最小值
  */
-
 int swimInWater(int** grid, int gridSize, int* gridColSize)
 {
     int disTable[gridSize][gridColSize[0]];

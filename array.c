@@ -133,3 +133,24 @@ int pivotIndex(int* nums, int numsSize)
 
     return -1;
 }
+
+/*
+ * 628. 三个数的最大乘积
+ * https://leetcode-cn.com/problems/maximum-product-of-three-numbers/
+ */
+int cmp1(const void *a, const void *b)
+{
+    return *(int *)a - *(int *)b;
+}
+
+int maximumProduct(int* nums, int numsSize){
+    qsort(nums, numsSize, sizeof(int), cmp1);
+    int maxForPos = nums[numsSize - 2] * nums[numsSize - 3];
+    int maxForNeg = nums[0] * nums[1];
+    if (nums[numsSize - 1] > 0) {
+        return max(maxForNeg, maxForPos) * nums[numsSize - 1];
+    } else {
+        return min(maxForNeg, maxForPos) * nums[numsSize - 1];
+    }
+
+}
