@@ -37,6 +37,7 @@ int main(int argc, const char *argv[])
     int returnSize1;
     int *ret1 = addToArrayForm(A, 4, 34, &returnSize1);
     printArray(ret1, returnSize1);
+    free(ret1);
     /*******************************************************************************/
     char *S = "\\/";
     printf("%s %d %c\n", S, (int)strlen(S), S[1]);
@@ -44,6 +45,11 @@ int main(int argc, const char *argv[])
     int nums[] = {0,0,0,0,1};
     int ret2 = pivotIndex(nums, 5);
     printf("ret2 = %d\n", ret2);
+    /*******************************************************************************/
+    char *strs[] = {"tars","rats","arts","star"};
+    int ret3 = numSimilarGroups(strs, 4);
+    printf("ret3 = %d\n", ret3);
+
     return 0;
 }
 

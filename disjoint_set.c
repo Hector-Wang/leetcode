@@ -200,3 +200,51 @@ int maxNumEdgesToRemove(int n, int** edges, int edgesSize, int* edgesColSize)
         return -1;
     }
 }
+
+/*
+ * 839. 相似字符串组
+ * https://leetcode-cn.com/problems/similar-string-groups/
+ */
+bool isSimilar(char *a, char *b)
+{
+    int notEqualNum = 0;
+    int len = strlen(a);
+    if (!strcmp(a, b)) {
+        return true;
+    }
+
+    for (int i = 0; i < len; ++i) {
+        if (a[i] == b[i]) {
+            continue;
+        }
+        notEqualNum++;
+    }
+
+    return notEqualNum == 2;
+}
+
+int numSimilarGroups(char ** strs, int strsSize)
+{
+    int res = 0;
+    int parent[strsSize];
+    initParent(parent, strsSize);
+
+    for (int i = 0; i < strsSize; ++i) {
+        for (int j = i + 1; j < strsSize; ++j) {
+            if (isSimilar(strs[i], strs[j])) {
+                int pi = find(i, parent);
+                int pj = find(j, parent);
+                if (pi != pj) {
+                    merge(pi, pj, parent);
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < strsSize; ++i) {
+        if (i == find(i, parent)) {
+            res++;
+        }
+    }
+    return res;
+}

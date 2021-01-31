@@ -15,4 +15,6 @@ int pivotIndex(int* nums, int numsSize);
 
 int findLengthOfLCIS(int* nums, int numsSize);
 
+int numSimilarGroups(char ** strs, int strsSize);
+
 #endif
