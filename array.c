@@ -154,3 +154,53 @@ int maximumProduct(int* nums, int numsSize){
     }
 
 }
+
+
+/*
+ * 888. 公平的糖果棒交换
+ * https://leetcode-cn.com/problems/fair-candy-swap/
+ */
+int cmp2(const void *a, const void *b)
+{
+    return *(int *)a - *(int *)b;
+}
+
+int* fairCandySwap(int* A, int ASize, int* B, int BSize, int* returnSize)
+{
+    int *ret = (int *)calloc(2, sizeof(int));
+    int ASum = 0, BSum = 0;
+    *returnSize = 2;
+    
+    for (int i = 0; i < ASize; ++i) {
+        ASum += A[i];
+    }
+    for (int i = 0; i < BSize; ++i) {
+        BSum += B[i];
+    }
+
+    qsort(A, ASize, sizeof(int), cmp2);
+    qsort(B, BSize, sizeof(int), cmp2);
+
+    int largerSize = ASum > BSum ? ASize : BSize;
+    int smallerSize = ASum < BSum ? ASize : BSize;
+    int diff = abs(BSum - ASum);
+    int *largerPtr = ASum > BSum ? A : B;
+    int *smallerPtr = ASum < BSum ? A : B;
+
+    int i = 0, j = 0;
+    for (; i < smallerSize; ++i) {
+        for (; j < largerSize; ++j) {
+            if (smallerPtr[i] >= largerPtr[j]) {
+                continue;
+            }
+            if ((largerPtr[j] - smallerPtr[i]) * 2 == diff) {
+                ret[0] = ASum > BSum ? largerPtr[j] : smallerPtr[i];
+                ret[1] = ASum > BSum ?  smallerPtr[i] : largerPtr[j];
+                return ret;
+            } else if ((largerPtr[j] - smallerPtr[i]) * 2 > diff) {
+                break;
+            }
+        }
+    }
+    return ret;
+}
