@@ -49,7 +49,10 @@ int main(int argc, const char *argv[])
     char *strs[] = {"tars","rats","arts","star"};
     int ret3 = numSimilarGroups(strs, 4);
     printf("ret3 = %d\n", ret3);
-
+    /*******************************************************************************/
+    int returnSize4;
+    int *ret4 = getRow(1, &returnSize4);
+    printArray(ret4, returnSize4);
     return 0;
 }
 

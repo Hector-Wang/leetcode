@@ -204,3 +204,29 @@ int* fairCandySwap(int* A, int ASize, int* B, int BSize, int* returnSize)
     }
     return ret;
 }
+
+
+/*
+ * 119. 杨辉三角 II
+ * https://leetcode-cn.com/problems/pascals-triangle-ii/
+ */
+int* getRow(int rowIndex, int* returnSize)
+{
+    int *ret = (int *)calloc(rowIndex + 1, sizeof(int));
+    *returnSize = rowIndex + 1;
+
+    for (int i = 0; i <= rowIndex; ++i) {
+        for (int j = i; j >= 0; --j) {
+            if (j == 0) {
+                ret[j] = 1;
+                continue;
+            }
+            if (j == i) {
+                ret[j] = 1;
+                continue;
+            }
+            ret[j] = ret[j - 1] + ret[j];
+        }
+    }
+    return ret;
+}
