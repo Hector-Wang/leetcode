@@ -53,3 +53,4 @@ dkms.conf
 
 #dirs
 list_hash/*
+.vscode/*
