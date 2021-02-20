@@ -53,6 +53,11 @@ int main(int argc, const char *argv[])
     int returnSize4;
     int *ret4 = getRow(1, &returnSize4);
     printArray(ret4, returnSize4);
+    free(ret4);
+    /*******************************************************************************/
+    int nums5[] = {1,2,2,3,1,4,2};
+    int ret5 = findShortestSubArray(nums5, 7);
+    printf("ret5 = %d\n", ret5);
     return 0;
 }
 

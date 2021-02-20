@@ -20,4 +20,7 @@ int numSimilarGroups(char ** strs, int strsSize);
 int minimumEffortPath(int **heights, int heightsSize, int *heightsColSize);
 
 int* getRow(int rowIndex, int* returnSize);
+
+int findShortestSubArray(int* nums, int numsSize);
+
 #endif

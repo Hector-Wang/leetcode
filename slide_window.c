@@ -42,3 +42,40 @@ int equalSubstring(char * s, char * t, int maxCost)
     }
     return res;
 }
+
+
+/*
+ * 697. 数组的度
+ * https://leetcode-cn.com/problems/degree-of-an-array/
+ */
+
+int findShortestSubArray(int* nums, int numsSize)
+{
+    int degree[5000];
+    int maxDegree = 0;
+    int res = numsSize;
+    for (int i = 0; i < numsSize; ++i) {
+        degree[nums[i]]++;
+        maxDegree = max(maxDegree, degree[nums[i]]);
+    }
+
+    memset(degree, 0, sizeof(degree));
+
+    int left = 0, right = 0;
+    int curMax = 0;
+    while (right < numsSize) {
+        degree[nums[right]]++;
+        curMax = max(curMax, degree[nums[right]]);
+        right++;
+        while (curMax == maxDegree) {
+            res = min(res, right - left);
+            if (curMax == degree[nums[left]]) {
+                curMax--;
+            }
+            degree[nums[left]]--;
+            left++;
+        }
+    }
+
+    return res;
+}
