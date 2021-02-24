@@ -23,4 +23,6 @@ int* getRow(int rowIndex, int* returnSize);
 
 int findShortestSubArray(int* nums, int numsSize);
 
+int maxSatisfied(int *customers, int customersSize, int *grumpy, int grumpySize, int X);
+
 #endif

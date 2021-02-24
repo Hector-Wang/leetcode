@@ -51,7 +51,7 @@ int equalSubstring(char * s, char * t, int maxCost)
 
 int findShortestSubArray(int* nums, int numsSize)
 {
-    int degree[5000];
+    int degree[50000] = {0};
     int maxDegree = 0;
     int res = numsSize;
     for (int i = 0; i < numsSize; ++i) {
@@ -75,6 +75,43 @@ int findShortestSubArray(int* nums, int numsSize)
             degree[nums[left]]--;
             left++;
         }
+    }
+
+    return res;
+}
+
+
+/*
+ * 1052. 爱生气的书店老板
+ * https://leetcode-cn.com/problems/grumpy-bookstore-owner/
+ */
+int maxSatisfied(int *customers, int customersSize, int *grumpy, int grumpySize, int X)
+{
+    int res = 0;
+
+    int maxSatisfiedNum = 0;
+    for (int i = 0 ; i < customersSize; ++i) {
+        if (!grumpy[i]) {
+            maxSatisfiedNum += customers[i];
+        }
+    }
+
+    for (int i = 0; i < X && i < customersSize; ++i) {
+        if (grumpy[i]) {
+            maxSatisfiedNum += customers[i];
+        }
+    }
+
+    res = maxSatisfiedNum;
+
+    for (int i = 1; i < customersSize - X + 1; ++i) {
+        if (grumpy[i - 1]) {
+            maxSatisfiedNum -= customers[i - 1];
+        }
+        if (grumpy[i + X - 1]) {
+            maxSatisfiedNum += customers[i + X - 1];
+        }
+        res = max(maxSatisfiedNum, res);
     }
 
     return res;
