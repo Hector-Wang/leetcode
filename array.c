@@ -230,3 +230,23 @@ int* getRow(int rowIndex, int* returnSize)
     }
     return ret;
 }
+
+/*
+ * 832. 翻转图像
+ * https://leetcode-cn.com/problems/flipping-an-image/
+ */
+int** flipAndInvertImage(int** A, int ASize, int* AColSize, int* returnSize, int** returnColumnSizes)
+{
+    int **ret = (int **)calloc(ASize, sizeof(int *));
+    *returnSize = ASize;
+    *returnColumnSizes = (int *)calloc(ASize, sizeof(int));
+
+    for (int i = 0; i < ASize; ++i) {
+        ret[i] = (int *)calloc(AColSize[i], sizeof(int));
+        (*returnColumnSizes)[i] = AColSize[i];
+        for (int j = 0; j < AColSize[i]; ++j) {
+            ret[i][j] = A[i][AColSize[i] - 1 - j] ^ 1;
+        }
+    }
+    return ret;
+}
