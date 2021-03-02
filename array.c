@@ -250,3 +250,79 @@ int** flipAndInvertImage(int** A, int ASize, int* AColSize, int* returnSize, int
     }
     return ret;
 }
+
+/*
+ * 304. 二维区域和检索 - 矩阵不可变
+ * https://leetcode-cn.com/problems/range-sum-query-2d-immutable/
+ * 使用前缀和
+ */
+
+typedef struct {
+    int **matrixSum;
+    int matrixSize;
+    int *matrixColSize;
+} NumMatrix;
+
+NumMatrix* numMatrixCreate(int** matrix, int matrixSize, int* matrixColSize)
+{
+    if (!matrix || !matrixSize || !matrixColSize) {
+        return NULL;
+    }
+    
+    NumMatrix *obj = (NumMatrix *)calloc(1, sizeof(NumMatrix));
+    obj->matrixSum = (int **)calloc(matrixSize, sizeof(int *));
+    obj->matrixColSize = (int *)calloc(matrixSize, sizeof(int));
+    if (!obj || !obj->matrixSum || !obj->matrixColSize) {
+        return NULL;
+    }
+    obj->matrixSize = matrixSize;
+
+    for (int i = 0; i < matrixSize; ++i) {
+        obj->matrixSum[i] = (int *)calloc(matrixColSize[i], sizeof(int));
+        obj->matrixColSize[i] = matrixColSize[i];
+        for (int j = 0; j < matrixColSize[i]; ++j) {
+            obj->matrixSum[i][j] = j == 0 ? matrix[i][j] : (obj->matrixSum[i][j - 1] + matrix[i][j]);
+        }
+    }
+
+    return obj;
+}
+
+int numMatrixSumRegion(NumMatrix* obj, int row1, int col1, int row2, int col2)
+{
+    if (!obj || !obj->matrixSum || !obj->matrixSize || !obj->matrixColSize) {
+        return 0;
+    }
+
+    if (row1 > row2 || col1 > col2) {
+        return 0;
+    }
+
+    if (row1 < 0 || row2 >= obj->matrixSize || col1 < 0 || col2 >= obj->matrixColSize[0]) {
+        return 0;
+    }
+
+    int res = 0;
+
+    for (int i = row1; i <= row2; ++i) {
+        res += obj->matrixSum[i][col2] - (col1 > 0 ? obj->matrixSum[i][col1 - 1] : 0);
+    }
+
+    return res;
+}
+
+void numMatrixFree(NumMatrix* obj)
+{
+    if (!obj) {
+        return;
+    }
+    
+    if (obj->matrixSum) {
+        for (int i = 0; i < obj->matrixSize; ++i) {
+            free(obj->matrixSum[i]);
+        }
+        free(obj->matrixSum);
+    }
+    free(obj->matrixColSize);
+    free(obj);
+}
