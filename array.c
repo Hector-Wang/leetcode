@@ -256,7 +256,6 @@ int** flipAndInvertImage(int** A, int ASize, int* AColSize, int* returnSize, int
  * https://leetcode-cn.com/problems/range-sum-query-2d-immutable/
  * 使用前缀和
  */
-
 typedef struct {
     int **matrixSum;
     int matrixSize;
@@ -324,5 +323,68 @@ void numMatrixFree(NumMatrix* obj)
         free(obj->matrixSum);
     }
     free(obj->matrixColSize);
+    free(obj);
+}
+
+/*
+ * 303. 区域和检索 - 数组不可变
+ * https://leetcode-cn.com/problems/range-sum-query-immutable/
+ * 使用前缀和
+ */
+typedef struct {
+    int *arraySum;
+    int arraySize;
+} NumArray;
+
+NumArray* numArrayCreate(int* nums, int numsSize)
+{
+    if (!nums || !numsSize) {
+        return NULL;
+    }
+
+    NumArray *obj = (NumArray *)calloc(1, sizeof(NumArray));
+    if (!obj) {
+        return NULL;
+    }
+
+    obj->arraySum = (int *)calloc(1, sizeof(numsSize + 1));
+    if (!obj->arraySum) {
+        return NULL;
+    }
+
+    obj->arraySize = numsSize;
+
+    for (int i = 0; i < numsSize; ++i) {
+        obj->arraySum[i + 1] = obj->arraySum[i] + nums[i];
+    }
+    return obj;
+}
+
+int numArraySumRange(NumArray* obj, int i, int j)
+{
+    if (!obj || !obj->arraySum || !obj->arraySize) {
+        return 0;
+    }
+
+    if (i > j) {
+        return 0;
+    }
+
+    if (i < 0 || j >= obj->arraySize) {
+        return 0;
+    }
+
+    return obj->arraySum[j + 1] - obj->arraySum[i];
+}
+
+void numArrayFree(NumArray* obj)
+{
+    if (!obj) {
+        return;
+    }
+    if (obj->arraySum) {
+        free(obj->arraySum);
+    }
+
     free(obj);
 }
