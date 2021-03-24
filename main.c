@@ -58,6 +58,29 @@ int main(int argc, const char *argv[])
     int nums5[] = {1,2,2,3,1,4,2};
     int ret5 = findShortestSubArray(nums5, 7);
     printf("ret5 = %d\n", ret5);
+    /*******************************************************************************/
+    char s[17] = "aabcbcc";
+    int returnSize6;
+    int *returnColumnSizes6;
+    char ***ret6 = partition(s, &returnSize6, &returnColumnSizes6);
+    printf("retSize = %d\n", returnSize6);
+    printf("retColSizes: ");
+    for (int i = 0; i < returnSize6; ++i) {
+        printf("%d ", returnColumnSizes6[i]);
+    }
+    printf("\n---------------------------------\n");
+    for (int i = 0; i < returnSize6; ++i) {
+        for (int j = 0; j < returnColumnSizes6[i]; ++j) {
+            printf("%s ", ret6[i][j]);
+            free(ret6[i][j]);
+        }
+        printf("\n");
+        free(ret6[i]);
+    }
+    printf("---------------------------------\n");
+    free(ret6);
+    free(returnColumnSizes6);
+    
     return 0;
 }
 

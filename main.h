@@ -25,4 +25,6 @@ int findShortestSubArray(int* nums, int numsSize);
 
 int maxSatisfied(int *customers, int customersSize, int *grumpy, int grumpySize, int X);
 
+char ***partition(char * s, int* returnSize, int** returnColumnSizes);
+
 #endif

@@ -347,7 +347,7 @@ NumArray* numArrayCreate(int* nums, int numsSize)
         return NULL;
     }
 
-    obj->arraySum = (int *)calloc(1, sizeof(numsSize + 1));
+    obj->arraySum = (int *)calloc(numsSize + 1, sizeof(int));
     if (!obj->arraySum) {
         return NULL;
     }
@@ -387,4 +387,29 @@ void numArrayFree(NumArray* obj)
     }
 
     free(obj);
+}
+
+/*
+ * 456. 132 模式
+ * https://leetcode-cn.com/problems/132-pattern/
+ * 暴力解法, 此题还可以用单调栈的做法求解，解法参考
+ * https://leetcode-cn.com/problems/132-pattern/solution/fu-xue-ming-zhu-cong-bao-li-qiu-jie-dao-eg78f/
+ */
+
+bool find132pattern(int* nums, int numsSize)
+{
+    if (!nums || numsSize < 3) {
+        return false;
+    }
+
+    int leftMin = nums[0];
+    for (int i = 1; i < numsSize; ++i) {
+        for (int j = i + 1; j < numsSize; ++j) {
+            if (nums[j] > leftMin && nums[j] < nums[i]) {
+                return true;
+            }
+        }
+        leftMin = min(leftMin, nums[i]);
+    }
+    return false;
 }
