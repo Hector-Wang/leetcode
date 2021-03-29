@@ -80,7 +80,7 @@ int main(int argc, const char *argv[])
     printf("---------------------------------\n");
     free(ret6);
     free(returnColumnSizes6);
-    
+    /*******************************************************************************/
     return 0;
 }
 
