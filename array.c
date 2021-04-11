@@ -526,3 +526,38 @@ int removeDuplicates(int* nums, int numsSize)
     }
     return ret;
 }
+
+/*
+ * 781. 森林中的兔子
+ * https://leetcode-cn.com/problems/rabbits-in-forest/
+ * 先排序，相邻相同的元素代表颜色相同的兔子，但是相同颜色兔子的个数不能大于当前这组元素的个数
+ */
+int cmpRabbits(const void *a, const void *b)
+{
+    return *(int *)a - *(int *)b;
+}
+
+int numRabbits(int* answers, int answersSize)
+{
+    if (!answers || answersSize <= 0) {
+        return 0;
+    }
+
+    int ret, currentLen;
+    
+    qsort(answers, answersSize, sizeof(int), cmpRabbits);
+    
+    ret = answers[0] + 1;
+    currentLen = 0;
+
+    for (int i = 1; i < answersSize; ++i) {
+        if (answers[i] == answers[i - 1] && currentLen < answers[i]) {
+            currentLen++;
+            continue;
+        }
+        currentLen = 0;
+        ret += (answers[i] + 1);
+    }
+
+    return ret;
+}
