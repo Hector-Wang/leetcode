@@ -495,3 +495,34 @@ bool search(int* nums, int numsSize, int target)
         return findInEdge(nums, target, 0, edge - 1) || findInEdge(nums, target, edge + 1, numsSize - 1);
     }
 }
+
+/*
+ * 80. 删除有序数组中的重复项 II
+ * https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/
+ */
+int removeDuplicates(int* nums, int numsSize)
+{
+    if (!nums || !numsSize) {
+        return 0;
+    }
+
+    int ret = numsSize;
+    int dupTimes = 0;
+    int i = 1;
+    while (i < numsSize) {
+        if (nums[i] == nums[i - 1]) {
+            dupTimes++;
+            if (dupTimes > 1) {
+                memmove(&nums[i], &nums[i + 1], (numsSize - i - 1) * sizeof(int));
+                numsSize--;
+                ret = numsSize;
+                dupTimes--;
+                continue;
+            }
+        } else {
+            dupTimes = 0;
+        }
+        i++;
+    }
+    return ret;
+}
