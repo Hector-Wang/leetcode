@@ -27,4 +27,6 @@ int maxSatisfied(int *customers, int customersSize, int *grumpy, int grumpySize,
 
 char ***partition(char * s, int* returnSize, int** returnColumnSizes);
 
+int** subsetsWithDup(int* nums, int numsSize, int* returnSize, int** returnColumnSizes);
+
 #endif

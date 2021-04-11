@@ -8,6 +8,7 @@
 #include <string.h>
 #include "list_hash/hlist.h"
 #include "list_hash/hhash.h"
+#include "uhash/uthash.h"
 #include "min_max.h"
 
 /*
@@ -61,5 +62,85 @@ char ***partition(char * s, int* returnSize, int** returnColumnSizes)
     backtracePartition(s, tmpContainer, &tmpConLen, ret, returnSize, *returnColumnSizes);
 
     free(tmpContainer);
+    return ret;
+}
+
+/*
+ * 90. 子集 II
+ * https://leetcode-cn.com/problems/subsets-ii/
+ * 回溯不断遍历数组，使用哈希表来存储已经求出来的子集，避免重复
+ */
+
+struct hash_node {
+    int *ptr;
+    UT_hash_handle hh;
+};
+
+struct hash_node *head = NULL;
+
+void findSubsetsHelper(int *nums, int numsSize, int *returnSize, int *returnColumnSizes, int **ret, int *tmpContainer, int *containerSize)
+{
+    struct hash_node *s; 
+    if (numsSize == 0) {
+        if (*containerSize == 0) {
+            //printf("got answer empty\n");
+            ret[*returnSize] = (int *)calloc(1, sizeof(int));
+            returnColumnSizes[*returnSize] = 0;
+            (*returnSize)++;
+            return;
+        }
+
+        //printf("got answer:");
+        //for (int i = 0; i < *containerSize; ++i) {
+        //    printf("%d ", tmpContainer[i]);
+        //}
+        //printf("\n");
+        HASH_FIND(hh, head, tmpContainer, *containerSize, s);
+        if (!s) {
+            ret[*returnSize] = (int *)calloc(*containerSize, sizeof(int));
+            memcpy(ret[*returnSize], tmpContainer, *containerSize * sizeof(int));
+            returnColumnSizes[*returnSize] = *containerSize;
+            s = (struct hash_node *)calloc(1, sizeof(struct hash_node));
+            s->ptr = ret[*returnSize];
+            HASH_ADD_KEYPTR(hh, head, s->ptr, *containerSize, s);
+            (*returnSize)++;
+        } else {
+            //for (int i = 0; i < *containerSize; ++i) {
+            //    printf("%d ", tmpContainer[i]);
+            //}
+            //printf("has been exist!\n");
+        }
+        return;
+    }
+
+    /* 不选择nums[0] */
+    //printf("do not select %d\n", nums[0]);
+    findSubsetsHelper(nums + 1, numsSize - 1, returnSize, returnColumnSizes, ret, tmpContainer, containerSize);
+
+    /* 选择nums[0] */
+    tmpContainer[*containerSize] = nums[0];
+    //printf("select %d\n", nums[0]);
+    (*containerSize)++;
+    findSubsetsHelper(nums + 1, numsSize - 1, returnSize, returnColumnSizes, ret, tmpContainer, containerSize);
+    (*containerSize)--;
+}
+
+int** subsetsWithDup(int* nums, int numsSize, int* returnSize, int** returnColumnSizes)
+{
+    struct hash_node *p, *tmp;
+    head = NULL;
+    int **ret = (int **)calloc(1024, sizeof(int *));
+    *returnColumnSizes = (int *)calloc(1024, sizeof(int));
+    int *tmpContainer = (int *)calloc(10, sizeof(int));
+    int containerSize = 0;
+    *returnSize = 0;
+
+    findSubsetsHelper(nums, numsSize, returnSize, *returnColumnSizes, ret, tmpContainer, &containerSize);
+
+    free(tmpContainer);
+    HASH_ITER(hh, head, p, tmp) {
+        HASH_DEL(head, p);
+        free(p);
+    }
     return ret;
 }

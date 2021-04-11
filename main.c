@@ -59,6 +59,7 @@ int main(int argc, const char *argv[])
     int ret5 = findShortestSubArray(nums5, 7);
     printf("ret5 = %d\n", ret5);
     /*******************************************************************************/
+    #if 0
     char s[17] = "aabcbcc";
     int returnSize6;
     int *returnColumnSizes6;
@@ -80,7 +81,24 @@ int main(int argc, const char *argv[])
     printf("---------------------------------\n");
     free(ret6);
     free(returnColumnSizes6);
+    #endif
     /*******************************************************************************/
+    int nums7[] = {1, 2, 2};
+    int returnSize7;
+    int *returnColumnSizes7;
+    int **ret7 = subsetsWithDup(nums7, 3, &returnSize7, &returnColumnSizes7);
+
+    for (int i = 0; i < returnSize7; ++i) {
+        for (int j = 0; j < returnColumnSizes7[i]; ++j) {
+            printf("%d ", ret7[i][j]);
+        }
+        printf("\n");
+        free(ret7[i]);
+    }
+    printf("---------------------------------\n");
+    free(ret7);
+    free(returnColumnSizes7);
+
     return 0;
 }
 
