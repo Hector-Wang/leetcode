@@ -90,3 +90,46 @@ int nthUglyNumber(int n)
     }
     return ugly[n - 1];
 }
+
+/*
+ * 1006. 笨阶乘
+ * https://leetcode-cn.com/problems/clumsy-factorial/
+ */
+int clumsy(int N){
+    int operation = 0; /* 0 for *, 1 for /, 2 for +, 3 for - */
+    int tmpOp = 0;
+
+    int ret = N;
+
+    for (int i = N - 1; i > 0; ) {
+        if (operation == 0) {
+            ret = ret * i;
+            operation = 1;
+            i--;
+        } else if (operation == 1) {
+            ret = ret / i;
+            operation = 2;
+            i--;
+        } else if (operation == 2) {
+            ret = ret + i;
+            operation = 3;
+            i--;
+        } else {
+            int tmpI = i;
+            for (int j = i - 1; j > 0 && tmpOp != 2; j--) {
+                if (tmpOp == 0) {
+                    tmpI = tmpI * j;
+                    tmpOp = 1;
+                } else if (tmpOp == 1) {
+                    tmpI = tmpI / j;
+                    tmpOp = 2;
+                }
+            }
+            tmpOp = 0;
+            ret = ret - tmpI;
+            operation = 2;
+            i -= 3;
+        }
+    }
+    return ret;
+}
