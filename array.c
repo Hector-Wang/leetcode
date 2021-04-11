@@ -413,3 +413,85 @@ bool find132pattern(int* nums, int numsSize)
     }
     return false;
 }
+
+/*
+ * 154. 寻找旋转排序数组中的最小值 II
+ * https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/
+ */
+int findMin(int* nums, int numsSize)
+{
+    int ret = nums[0];
+    for (int i = 1; i < numsSize; ++i) {
+        if (nums[i] < nums[i - 1]) {
+            return nums[i];
+        }
+    }
+    return ret;
+}
+
+/*
+ * 153. 寻找旋转排序数组中的最小值
+ * https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/
+ */
+int findMinI(int* nums, int numsSize)
+{
+    int ret = nums[0];
+    for (int i = 1; i < numsSize; ++i) {
+        if (nums[i] < nums[i - 1]) {
+            return nums[i];
+        }
+    }
+    return ret;
+}
+
+/*
+ * 81. 搜索旋转排序数组 II
+ * https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/
+ * 先寻找边界，再二分查找
+ */
+int findEdge(int *nums, int numsSize)
+{
+    for (int i = 1; i < numsSize; ++i) {
+        if (nums[i] < nums[i - 1]) {
+            return i;
+        }
+    }
+    return 0;
+}
+
+bool findInEdge(int *nums, int target, int left, int right)
+{
+    int middle;
+    if (left > right) {
+        return false;
+    } else if (left == right) {
+        if (target == nums[left]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    while (left <= right) {
+        middle = (left + right) / 2;
+        if (nums[middle] == target) {
+            return true;
+        }
+        if (nums[middle] > target) {
+            right = middle - 1;
+        } else {
+            left = middle + 1;
+        }
+    }
+    return false;
+}
+
+bool search(int* nums, int numsSize, int target)
+{
+    int edge = findEdge(nums, numsSize);
+    if (nums[edge] == target) {
+        return true;
+    } else {
+        return findInEdge(nums, target, 0, edge - 1) || findInEdge(nums, target, edge + 1, numsSize - 1);
+    }
+}

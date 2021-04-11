@@ -90,33 +90,3 @@ int nthUglyNumber(int n)
     }
     return ugly[n - 1];
 }
-
-/*
- * 154. 寻找旋转排序数组中的最小值 II
- * https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/
- */
-int findMin(int* nums, int numsSize)
-{
-    int ret = nums[0];
-    for (int i = 1; i < numsSize; ++i) {
-        if (nums[i] < nums[i - 1]) {
-            return nums[i];
-        }
-    }
-    return ret;
-}
-
-/*
- * 153. 寻找旋转排序数组中的最小值
- * https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/
- */
-int findMinI(int* nums, int numsSize)
-{
-    int ret = nums[0];
-    for (int i = 1; i < numsSize; ++i) {
-        if (nums[i] < nums[i - 1]) {
-            return nums[i];
-        }
-    }
-    return ret;
-}
