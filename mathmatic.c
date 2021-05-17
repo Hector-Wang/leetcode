@@ -133,3 +133,38 @@ int clumsy(int N){
     }
     return ret;
 }
+
+/*
+ * https://leetcode-cn.com/problems/maximum-xor-of-two-numbers-in-an-array/
+ * 421. 数组中两个数的最大异或值
+ */
+/* 倒序排列 */
+int cmpMaxXOR(const void *a, const void *b)
+{
+    return *(int *)a < *(int *)b;
+}
+
+int findMaximumXOR(int* nums, int numsSize)
+{
+    int maxValue = 0;
+    if (!nums || numsSize <= 0) {
+        return 0;
+    }
+
+    if (numsSize == 1) {
+        return nums[0];
+    }
+
+    qsort(nums, numsSize, sizeof(int), cmpMaxXOR);
+
+    for (int i = 0; i < numsSize; ++i) {
+        for (int j = i + 1; j < numsSize; ++j) {
+            if (nums[i] + nums[j] <= maxValue) {
+                break;
+            }
+            maxValue = max(maxValue, nums[i] ^ nums[j]);
+        }
+    }
+
+    return maxValue;
+}
