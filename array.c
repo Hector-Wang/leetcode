@@ -561,3 +561,56 @@ int numRabbits(int* answers, int answersSize)
 
     return ret;
 }
+
+/*
+ * 645. 错误的集合
+ * https://leetcode-cn.com/problems/set-mismatch/
+ */
+
+static int cmpFindErrorNums(const void *a, const void *b)
+{
+    return *(int *)a - *(int *)b;
+}
+
+int* findErrorNums(int* nums, int numsSize, int* returnSize)
+{
+    int i;
+
+    if (!nums || !numsSize) {
+        return NULL;
+    }
+
+    *returnSize = 2;
+    int *ret = (int *)calloc(*returnSize, sizeof(int));
+
+    qsort(nums, numsSize, sizeof(int), cmpFindErrorNums);
+
+    for (i = 1; i < numsSize; ++i) {
+        if (nums[i] == nums[i - 1]) {
+            ret[0] = nums[i];
+            nums[i] = 0;
+            break;
+        }
+    }
+    
+    if (i < numsSize - 1) {
+        memmove(nums + i, nums + i + 1, (numsSize - i - 1) * sizeof(int));
+    }
+
+    numsSize--;
+
+    qsort(nums, numsSize, sizeof(int), cmpFindErrorNums);
+
+    for (i = 0; i < numsSize; ++i) {
+        if (nums[i] != i + 1) {
+            ret[1] = i + 1;
+            break;
+        }
+    }
+
+    if (i == numsSize) {
+        ret[1]  = i + 1;
+    }
+
+    return ret;
+}

@@ -29,4 +29,6 @@ char ***partition(char * s, int* returnSize, int** returnColumnSizes);
 
 int** subsetsWithDup(int* nums, int numsSize, int* returnSize, int** returnColumnSizes);
 
+int* findErrorNums(int* nums, int numsSize, int* returnSize);
+
 #endif

@@ -98,7 +98,16 @@ int main(int argc, const char *argv[])
     printf("---------------------------------\n");
     free(ret7);
     free(returnColumnSizes7);
-
+    /*****************************************************************************/
+    int nums8[] = {1,5,3,2,2,7,6,4,8,9};
+    int returnSize8;
+    int *ret8 = findErrorNums(nums8, 10, &returnSize8);
+    for (int i = 0; i < returnSize8; ++i) {
+        printf("%d ", ret8[i]);
+    }
+    printf("\n");
+    printf("---------------------------------\n");
+    free(ret8);
     return 0;
 }
 
