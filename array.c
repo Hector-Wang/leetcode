@@ -614,3 +614,128 @@ int* findErrorNums(int* nums, int numsSize, int* returnSize)
 
     return ret;
 }
+
+
+/*
+ * 451. 根据字符出现频率排序
+ * https://leetcode-cn.com/problems/sort-characters-by-frequency/
+ */
+
+struct charNode {
+    char c;
+    int times;
+};
+
+int cmpFrequencySort(const void *a, const void *b)
+{
+    struct charNode *na = (struct charNode *)a;
+    struct charNode *nb = (struct charNode *)b;
+    if (na->times == nb->times) {
+        return na->c < nb->c;
+    } else {
+        return na->times < nb->times;
+    }
+}
+
+char * frequencySort(char * s)
+{
+    int freq[256] = {0};
+    int sLen = strlen(s);
+    char *ret = (char *)calloc(sLen + 1, sizeof(char));
+    struct charNode *stringNode = (struct charNode *)calloc(sLen, sizeof(struct charNode));
+
+    for (int i = 0; i < sLen; ++i) {
+        ++freq[s[i]];
+    }
+
+    for (int i = 0; i < sLen; ++i) {
+        stringNode[i].c = s[i];
+        stringNode[i].times = freq[s[i]];
+    }
+
+    qsort(stringNode, sLen, sizeof(struct charNode), cmpFrequencySort);
+
+    for (int i = 0; i < sLen; ++i) {
+        ret[i] = stringNode[i].c;
+    }
+
+    free(stringNode);
+    return ret;
+}
+
+/*
+ * 面试题 10.02. 变位词组
+ * https://leetcode-cn.com/problems/group-anagrams-lcci/
+ * 最后一个用例超时
+ */
+void cpyToRetArray(char **retStr, char *inputStr, int *returnColumeSizes, int columeIndex)
+{
+    *retStr = (char *)calloc(strlen(inputStr) + 1, sizeof(char));
+    strcpy(*retStr, inputStr);
+    returnColumeSizes[columeIndex]++;
+}
+
+int cmpHeadStr(char *first, char *second)
+{
+#define ALPHABET_LEN 26
+    int record[ALPHABET_LEN] = {0};
+    int fisrtLen = strlen(first);
+    int sencondLen = strlen(second);
+    if (fisrtLen != sencondLen) {
+        return -1;
+    }
+
+    for (int i = 0; i < fisrtLen; ++i) {
+        record[first[i] - 'a']++;
+    }
+
+    for (int i = 0; i < sencondLen; ++i) {
+        record[second[i] - 'a']--;
+    }
+
+    for (int i = 0; i < ALPHABET_LEN; ++i) {
+        if (record[i] != 0) {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+char*** groupAnagrams(char** strs, int strsSize, int* returnSize, int** returnColumnSizes)
+{
+    bool copyFlag = false;
+    if (!strs || strsSize <= 0) {
+        *returnSize = 0;
+        *returnColumnSizes = NULL;
+        return NULL;
+    }
+    char ***ret = (char ***)calloc(strsSize, sizeof(char **));
+
+    for (int i = 0; i < strsSize; ++i) {
+        ret[i] = (char **)calloc(strsSize, sizeof(char*));
+    }
+
+    *returnColumnSizes = (int *)calloc(strsSize, sizeof(int));
+    *returnSize = 0;
+
+    cpyToRetArray(&ret[0][0], strs[0], *returnColumnSizes, 0);
+    (*returnSize)++;
+    for (int i = 1; i < strsSize; ++i) {
+        copyFlag = false;
+        for (int j = 0; j < *returnSize; ++j) {
+            if (cmpHeadStr(strs[i], ret[j][0]) == 0) {
+                cpyToRetArray(&ret[j][(*returnColumnSizes)[j]], strs[i], *returnColumnSizes, j);
+                copyFlag = true;
+                break;
+            }
+        }
+        if (!copyFlag) {
+            cpyToRetArray(&ret[*returnSize][0], strs[i], *returnColumnSizes, *returnSize);
+            (*returnSize)++;
+        }
+    }
+
+    return ret;
+}
+

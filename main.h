@@ -31,4 +31,7 @@ int** subsetsWithDup(int* nums, int numsSize, int* returnSize, int** returnColum
 
 int* findErrorNums(int* nums, int numsSize, int* returnSize);
 
+char * frequencySort(char * s);
+
+int* restoreArray2(int** adjacentPairs, int adjacentPairsSize, int* adjacentPairsColSize, int* returnSize);
 #endif

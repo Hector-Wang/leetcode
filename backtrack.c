@@ -144,3 +144,92 @@ int** subsetsWithDup(int* nums, int numsSize, int* returnSize, int** returnColum
     }
     return ret;
 }
+
+/*
+ * 1743. 从相邻元素对还原数组
+ * https://leetcode-cn.com/problems/restore-the-array-from-adjacent-pairs/
+ * 使用回溯算法解题，超时
+ * 使用图论-拓扑排序的解法，详见graph_threory.c文件
+ */
+
+static inline int numberUsed(int num, int *posUsed, int *negeUsed)
+{
+    return num >= 0 ? posUsed[num] : negeUsed[-num];
+}
+
+static inline void useNumber(int num, int *posUsed, int *negeUsed)
+{
+    if (num >= 0) {
+        posUsed[num] = 1;
+    } else {
+        negeUsed[-num] = 1;
+    }
+}
+
+static inline void unUseNumber(int num, int *posUsed, int *negeUsed)
+{
+    if (num >= 0) {
+        posUsed[num] = 0;
+    } else {
+        negeUsed[-num] = 0;
+    }
+}
+
+void backTrackRestoreArray(int** adjacentPairs, int adjacentPairsSize, int *ret, int* returnSize, 
+    int *posUsed, int *negUsed, int *found, int firstNum)
+{
+    if (*found) {
+        return;
+    }
+    if (*returnSize == adjacentPairsSize + 1) {
+        *found = 1;
+        return;
+    }
+
+    for (int i = 0; i < adjacentPairsSize; ++i) {
+        if (firstNum == adjacentPairs[i][0] && !numberUsed(adjacentPairs[i][1], posUsed, negUsed)) {
+            ret[(*returnSize)++] = adjacentPairs[i][1];
+            useNumber(adjacentPairs[i][1], posUsed, negUsed);
+            backTrackRestoreArray(adjacentPairs, adjacentPairsSize, ret, returnSize, posUsed, negUsed, found, adjacentPairs[i][1]);
+            if (*found) {
+                return;
+            }
+            unUseNumber(adjacentPairs[i][1], posUsed, negUsed);
+            (*returnSize)--;
+        }
+
+        if (firstNum == adjacentPairs[i][1] && !numberUsed(adjacentPairs[i][0], posUsed, negUsed))
+        {
+            ret[(*returnSize)++] = adjacentPairs[i][0];
+            useNumber(adjacentPairs[i][0], posUsed, negUsed);
+            backTrackRestoreArray(adjacentPairs, adjacentPairsSize, ret, returnSize, posUsed, negUsed, found, adjacentPairs[i][0]);
+            if (*found) {
+                return;
+            }
+            unUseNumber(adjacentPairs[i][0], posUsed, negUsed);
+            (*returnSize)--;            
+        }
+    }
+}
+
+int* restoreArray(int** adjacentPairs, int adjacentPairsSize, int* adjacentPairsColSize, int* returnSize)
+{ 
+    int posUsed[100001] = {0};
+    int negUsed[100001] = {0};
+    int found = 0;
+    int *ret = (int *)calloc(adjacentPairsSize + 1, sizeof(int));
+    *returnSize = 0;
+
+    for (int i = 0; i < adjacentPairsSize; ++i) {
+        backTrackRestoreArray(adjacentPairs, adjacentPairsSize, ret, returnSize, posUsed, negUsed, &found, adjacentPairs[i][0]);
+        if (found) {
+            break;
+        }
+        backTrackRestoreArray(adjacentPairs, adjacentPairsSize, ret, returnSize, posUsed, negUsed, &found, adjacentPairs[i][1]);
+        if (found) {
+            break;
+        }
+    }
+
+    return ret;
+}

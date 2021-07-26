@@ -47,3 +47,31 @@ int findLengthOfLCIS(int* nums, int numsSize)
     }
     return res;
 }
+
+/*
+ * 1713. 得到子序列的最少操作次数
+ * 转换为最长公共子序列的问题：最少的操作次数，就等于target长度减去target与arr的最长公共子序列的长度
+ * 动态规划解法，会超时
+ * dp(i, j) -- target[0...i - 1]与arr[0...j - 1]的最长公共子序列
+ * dp(i ,j):
+ * i == j -- dp(i - 1, j - 1) + 1
+ * i != j -- max(dp(i - 1, j), dp(i, j - 1))
+ * dp(0, j) = 0, dp(i, 0) = 0
+ */
+int minOperations(int* target, int targetSize, int* arr, int arrSize)
+{
+    int dp[targetSize + 1][arrSize + 1];
+    memset(dp, 0, sizeof(dp));
+
+    for (int i = 1; i <= targetSize; ++i) {
+        for (int j = 1; j <= arrSize; ++j) {
+            if (target[i - 1] == arr[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    return targetSize - dp[targetSize][arrSize];
+}

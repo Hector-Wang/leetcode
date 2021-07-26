@@ -2,7 +2,7 @@
 cc := gcc
 srcs = $(wildcard *.c)  
 objs = $(patsubst %c, %o, $(srcs))  
-cflags = -fsanitize=address -O1 -fno-omit-frame-pointer -g
+cflags = -fsanitize=address -O1 -fno-omit-frame-pointer -g -lm
 
 all: $(objs)
 	@echo Generating target file a.out...done!

@@ -8,6 +8,7 @@
 #include <string.h>
 #include "list_hash/hlist.h"
 #include "list_hash/hhash.h"
+#include "uhash/uthash.h"
 #include "min_max.h"
 
 
@@ -189,4 +190,133 @@ int swimInWater(int** grid, int gridSize, int* gridColSize)
         }
     }
     return disTable[gridSize - 1][gridColSize[0] - 1];
+}
+
+/*
+ * 1743. 从相邻元素对还原数组
+ * https://leetcode-cn.com/problems/restore-the-array-from-adjacent-pairs/
+ * 拓扑排序：
+ * 先找到只出现一次的数字，该数字入度为0，然后开始拓扑排序
+ * uhash保存每个数字的度，以及
+ */
+
+struct DegreeNeighborHashNode {
+    int num; // key
+    int inDegree;
+    int neighbor[2]; // 保存与其相邻的元素
+    int neighborNum; // neighbor数组的长度
+    UT_hash_handle hh;
+};
+
+struct UsedHashNode {
+    int num; // key
+    UT_hash_handle hh;    
+};
+
+void constructTable(struct DegreeNeighborHashNode **head, int a, int b)
+{
+    struct DegreeNeighborHashNode *s;
+    HASH_FIND_INT(*head, &a, s);
+
+    if (s) {
+        s->inDegree++;
+        s->neighbor[s->neighborNum++] = b;
+    } else {
+        s = (struct DegreeNeighborHashNode *)calloc(1, sizeof(*s));
+        s->num = a;
+        s->inDegree = 0;
+        s->neighbor[s->neighborNum++] = b;
+        HASH_ADD_INT(*head, num, s);
+    }
+}
+
+void insertVisitedTable(struct UsedHashNode **head, int num)
+{
+    struct UsedHashNode *s = (struct UsedHashNode *)calloc(1, sizeof(*s));
+
+    s->num = num;
+    HASH_ADD_INT(*head, num, s);
+}
+
+bool checkVisted(struct UsedHashNode *head, int num)
+{
+    struct UsedHashNode *s;
+    HASH_FIND_INT(head, &num, s);
+    return s != NULL;
+}
+
+bool findNext(struct DegreeNeighborHashNode *head, int a, struct UsedHashNode *head2, int *nextNum)
+{
+    struct DegreeNeighborHashNode *s;
+    int next;
+    
+    HASH_FIND_INT(head, &a, s);
+    next = s->neighbor[0];
+    if (s->neighborNum >= 1 && !checkVisted(head2, next)) {
+        *nextNum = next;
+        return true;
+    }
+
+    next = s->neighbor[1];
+    if (s->neighborNum >= 2 && !checkVisted(head2, next)) {
+        *nextNum = next;
+        return true;
+    }    
+
+    return false;
+}
+
+int* restoreArray2(int** adjacentPairs, int adjacentPairsSize, int* adjacentPairsColSize, int* returnSize)
+{
+    struct DegreeNeighborHashNode *head = NULL;
+    struct DegreeNeighborHashNode *s, *tmp;
+
+    struct UsedHashNode *head2 = NULL;
+    struct UsedHashNode *s2, *tmp2;
+
+    int *ret = (int *)calloc(adjacentPairsSize + 1, sizeof(int));
+    *returnSize = 0;
+
+    int queue[adjacentPairsSize + 1];
+    int front = 0;
+    int rear = 0;
+
+    for (int i = 0; i < adjacentPairsSize; ++i) {
+        constructTable(&head, adjacentPairs[i][0], adjacentPairs[i][1]);
+        constructTable(&head, adjacentPairs[i][1], adjacentPairs[i][0]);
+    }
+
+
+    // bfs拓扑排序
+    // 找到第一个入读为0的点，入队
+    HASH_ITER(hh, head, s, tmp) {
+        if (s->inDegree == 0) {
+            queue[front++] = s->num;
+            insertVisitedTable(&head2, s->num);
+            break;
+        }
+    }
+
+    while (front != rear) {
+        int val = queue[rear++];
+        int next;
+        ret[(*returnSize)++] = val;
+        if (findNext(head, val, head2, &next)) {
+            printf("Find next for val:%d, next is %d\n", val, next);
+            queue[front++] = next;
+            insertVisitedTable(&head2, next);
+        }
+    }
+
+    HASH_ITER(hh, head, s, tmp) {
+        HASH_DEL(head, s);
+        free(s);
+    }
+    
+    HASH_ITER(hh, head2, s2, tmp2) {
+        HASH_DEL(head2, s2);
+        free(s2);
+    }
+
+    return ret;
 }

@@ -108,6 +108,34 @@ int main(int argc, const char *argv[])
     printf("\n");
     printf("---------------------------------\n");
     free(ret8);
+    /****************************************************************************/
+    char *ret9 = frequencySort("tree");
+    printf("%s\n", ret9);
+    free(ret9);
+    printf("---------------------------------\n");
+    /****************************************************************************/
+    int** adjacentPairs = (int **)calloc(3, sizeof(int *));
+    int adjacentPairsColSize[3] = {2, 2, 2};
+    int returnSize10;
+    for (int i = 0; i < 3; ++i) {
+        adjacentPairs[i] = (int *)calloc(2, sizeof(int));
+    }
+    adjacentPairs[0][0] = 2;
+    adjacentPairs[0][1] = 1;
+    adjacentPairs[1][0] = 3;
+    adjacentPairs[1][1] = 4;
+    adjacentPairs[2][0] = 3;
+    adjacentPairs[2][1] = 2;
+
+    int *ret10 = restoreArray2(adjacentPairs, 3, adjacentPairsColSize, &returnSize10);
+
+    for (int i = 0; i < 3; ++i) {
+        free(adjacentPairs[i]);
+    }
+
+    free(adjacentPairs);
+    free(ret10);
+
     return 0;
 }
 
